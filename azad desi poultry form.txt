@@ -1,0 +1,234 @@
+Display', serif;}
+.bottombar div{cursor:pointer;}
+.popup{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;justify-content:center;align-items:center;z-index:1000;}
+.popup-content{background:white;padding:20px;border-radius:12px;width:90%;max-width:400px;text-align:center;font-family:'Playfair Display', serif;font-style:italic;font-weight:700;}
+.popup-content h2{margin-bottom:15px;}
+.popup-content button{margin:5px;padding:8px 12px;border:none;border-radius:8px;cursor:pointer;font-family:'Playfair Display', serif;font-style:italic;font-weight:700;}
+.close-btn{background:#ccc;}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azad Desi Poultry Farm</title>
+<!-- Google Font Italic Bold -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Playfair Display', serif;font-style:italic;font-weight:700;background:#f9f9f9;color:#333;}
+#loadingScreen{position:fixed;inset:0;background:linear-gradient(135deg,#2e7d32,#66bb6a);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:2000;}
+#loadingScreen h1{font-family:'Playfair Display', serif;font-style:italic;font-weight:700;font-size:30px;color:#fff;text-shadow:2px 2px 8px rgba(0,0,0,0.4);}
+header{background:#2e7d32;color:white;padding:12px;display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:700;font-style:italic;}
+header button{background:none;border:none;color:white;font-size:18px;cursor:pointer;font-family:'Playfair Display', serif;font-style:italic;font-weight:700;}
+#drawer{position:fixed;left:-250px;top:0;width:250px;height:100%;background:#fff;box-shadow:2px 0 6px rgba(0,0,0,0.3);transition:left 0.3s;padding:20px;z-index:1500;}
+#drawer.active{left:0;}
+#drawer h2{margin-bottom:12px;font-size:20px;color:#2e7d32;font-family:'Playfair Display', serif;font-style:italic;font-weight:700;}
+#drawer ul{list-style:none;}
+#drawer li{margin:12px 0;font-size:16px;cursor:pointer;color:#333;font-family:'Playfair Display', serif;font-style:italic;font-weight:700;}
+#drawer li:hover{color:#2e7d32;}
+.categories{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;padding:15px;}
+.category{background:white;padding:20px;text-align:center;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);font-weight:700;color:#2e7d32;cursor:pointer;transition:transform 0.2s;font-family:'Playfair Display', serif;font-style:italic;}
+.category:hover{transform:scale(1.05);}
+.product{background:white;margin:12px;padding:15px;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);font-family:'Playfair Display', serif;font-style:italic;font-weight:700;}
+.product img{width:100%;border-radius:8px;}
+.product h3{margin:10px 0;font-family:'Playfair Display', serif;font-style:italic;font-weight:700;}
+.product button{background:#2e7d32;color:white;border:none;padding:8px 15px;border-radius:8px;cursor:pointer;margin-right:8px;font-family:'Playfair Display', serif;font-style:italic;font-weight:700;}
+.product button:hover{background:#1b5e20;}
+.bottombar{position:fixed;bottom:0;left:0;right:0;background:#2e7d32;display:flex;justify-content:space-around;padding:12px;color:white;font-weight:700;font-style:italic;font-family:'Playfair 
+.save-btn{background:#2e7d32;color:white;}
+form input, form select, form textarea { width:100%; padding:8px; margin:5px 0 10px 0; border-radius:8px; border:1px solid #ccc; font-family:'Playfair Display', serif; font-style:italic; font-weight:700; }
+form button { width:100%; padding:10px; border-radius:8px; border:none; background:#2e7d32; color:white; font-weight:700; cursor:pointer; font-family:'Playfair Display', serif; font-style:italic; }
+</style>
+</head>
+<body>
+
+<div id="loadingScreen"><h1>Azad Desi Poultry Farm</h1></div>
+
+<header>
+  <button onclick="toggleDrawer()">☰ Menu</button>
+  <span id="userNameDisplay">Azad Farm</span>
+  <button onclick="openProfile()">👤</button>
+</header>
+
+<div id="drawer">
+  <h2>Menu</h2>
+  <ul>
+    <li onclick="showHome()">🏠 Home</li>
+    <li onclick="showPurchased()">📦 Purchased</li>
+    <li onclick="callCompany()">☎ Contact Us</li>
+    <li onclick="sellProduct()">💰 Sell Product</li>
+  </ul>
+</div>
+
+<div class="categories" id="categories">
+  <div class="category" onclick="showProducts('Sheep')">🐑 Sheep</div>
+  <div class="category" onclick="showProducts('Goat')">🐐 Goat</div>
+  <div class="category" onclick="showProducts('Hen')">🐓 Hen</div>
+</div>
+
+<div id="products"></div>
+
+<div class="bottombar">
+  <div onclick="showHome()">🏠 Home</div>
+  <div onclick="showPurchased()">📦 Purchased</div>
+  <div onclick="callCompany()">☎ Contact</div>
+</div>
+
+<div class="popup" id="popup">
+  <div class="popup-content">
+    <h2>Call Seller?</h2>
+    <button class="save-btn" onclick="callSeller()">📞 Call</button>
+    <button class="close-btn" onclick="closePopup()">Cancel</button>
+  </div>
+</div>
+
+<div class="popup" id="profilePopup">
+  <div class="popup-content">
+    <h2>My Profile</h2>
+    <p>Enter your name:</p>
+    <input type="text" id="profileName" placeholder="Your Name">
+    <button class="save-btn" onclick="saveProfile()">Save</button>
+    <button class="close-btn" onclick="closeProfile()">Close</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAhiMLFwvGxgfIMv9WRQp0DdCka8Kon8j4",
+  authDomain: "azad-poultry-farm.firebaseapp.com",
+  databaseURL: "https://azad-poultry-farm-default-rtdb.firebaseio.com",
+  projectId: "azad-poultry-farm",
+  storageBucket: "azad-poultry-farm.firebasestorage.app",
+  messagingSenderId: "1098245734535",
+  appId: "1:1098245734535:android:6ae7a8cdfaa11cb5c37822"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const companyNumber = '7809896339';
+let sellerNumber = '9876543210';
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("loadingScreen").style.display = "none";
+    loadAllProducts();
+    loadUserName();
+  }, 2000);
+});
+
+function toggleDrawer() { document.getElementById("drawer").classList.toggle("active"); }
+function openProfile() {
+  document.getElementById("profilePopup").style.display = "flex";
+  const savedName = localStorage.getItem("userName");
+  if(savedName) document.getElementById("profileName").value = savedName;
+}
+function closeProfile() { document.getElementById("profilePopup").style.display = "none"; }
+function saveProfile() {
+  const name = document.getElementById("profileName").value.trim();
+  if(name) {
+    localStorage.setItem("userName", name);
+    document.getElementById("userNameDisplay").innerText = name;
+    alert("Profile saved successfully!");
+    closeProfile();
+  } else alert("Please enter your name!");
+}
+function loadUserName() {
+  const savedName = localStorage.getItem("userName");
+  if(savedName) document.getElementById("userNameDisplay").innerText = savedName;
+}
+
+function showPopup() { document.getElementById("popup").style.display = "flex"; }
+function closePopup() { document.getElementById("popup").style.display = "none"; }
+function callSeller(number) { window.location.href = `tel:${number || sellerNumber}`; }
+function callCompany() { window.location.href = `tel:${companyNumber}`; }
+
+function showHome() {
+  document.getElementById("categories").style.display = "grid";
+  document.getElementById("products").innerHTML = "";
+  document.getElementById("drawer").classList.remove("active");
+}
+function showPurchased() {
+  document.getElementById("categories").style.display = "none";
+  document.getElementById("products").innerHTML = "<h2 style='padding:20px'>No purchased items yet.</h2>";
+  document.getElementById("drawer").classList.remove("active");
+}
+
+function sellProduct() {
+  document.getElementById("categories").style.display = "none";
+  document.getElementById("products").innerHTML = `
+    <div class="product">
+      <h3>Sell Your Animal</h3>
+      <form id="sellForm">
+        <label>Animal Type:</label>
+        <select id="animalType" required>
+          <option value="">Select</option>
+          <option value="Sheep">Sheep</option>
+          <option value="Goat">Goat</option>
+          <option value="Hen">Hen</option>
+        </select>
+        <label>Description:</label>
+        <textarea id="animalDesc" required placeholder="Enter details..."></textarea>
+        <label>Price:</label>
+        <input type="text" id="animalPrice" required placeholder="Enter price">
+        <label>Photo:</label>
+        <input type="file" id="animalPhoto" accept="image/*" required>
+        <label>Seller Number:</label>
+        <input type="text" id="animalSellerNumber" required placeholder="Enter your phone number">
+        <button type="submit">Publish</button>
+      </form>
+    </div>
+  `;
+  document.getElementById("drawer").classList.remove("active");
+
+  document.getElementById("sellForm").onsubmit = function(e) {
+    e.preventDefault();
+    const animal = document.getElementById("animalType").value;
+    const desc = document.getElementById("animalDesc").value;
+    const price = document.getElementById("animalPrice").value;
+    const file = document.getElementById("animalPhoto").files[0];
+    const sellerNum = document.getElementById("animalSellerNumber").value;
+
+    const reader = new FileReader();
+    reader.onload = function() {
+      const photoData = reader.result;
+      db.ref('products').push({ animal, desc, price, photo: photoData, sellerNumber: sellerNum });
+      alert("Published successfully!");
+      showProducts(animal);
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function loadAllProducts() {
+  db.ref('products').on('value', snapshot => {
+    const currentCategory = document.getElementById("products").dataset.category;
+    if(currentCategory) showProducts(currentCategory);
+  });
+}
+
+function showProducts(category) {
+  document.getElementById("categories").style.display = "none";
+  document.getElementById("products").dataset.category = category;
+  db.ref('products').once('value', snapshot => {
+    const products = snapshot.val() || {};
+    let html = '';
+    Object.values(products).filter(p => p.animal === category).forEach(p => {
+      html += `
+        <div class="product">
+          <img src="${p.photo}" alt="${p.animal}">
+          <h3>${p.animal} for Sale</h3>
+          <p>${p.desc}</p>
+          <p>Price: ${p.price}</p>
+          <button onclick="callSeller('${p.sellerNumber}')">📞 Call Seller</button>
+        </div>
+      `;
+    });
+    if(!html) html = `<div class="product"><img src="https://placehold.co/400x200?text=${category}" alt="${category}"><h3>${category} for Sale</h3><p>Pure desi, healthy ${category.toLowerCase()}.</p><button onclick="showPopup()">Buy Now</button></div>`;
+    document.getElementById("products").innerHTML = html;
+  });
+}
+</script>
+</body>
+</html>
